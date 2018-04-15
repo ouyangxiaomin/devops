@@ -8,7 +8,7 @@ Notes: This is only supported in CentOS7.
 
 
 #################
-- name: docker registry
+- docker registry
 1. docker run -d -p 5000:5000 --restart=always --name registry registry:2
 2. docker pull hello-world
 3. docker tag hello-world localhost:5000/hello-world:latest
@@ -21,9 +21,11 @@ Notes: This is only supported in CentOS7.
 10. docker tag test localhost:5000/test:0.1
 11. docker push localhost:5000/test:0.1
 
-- name: nginx init
+- nginx init
 1. kubectl apply -f /tmp/nginx.yaml
-2. curl http://x.x.x.x:30000
+2. kubectl scale deploy nginx --replicas=2
+3. kubectl set image deploy nginx nginx=nginx:1.9.1
+4. curl http://x.x.x.x:30000
 
 
 #################
