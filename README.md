@@ -22,5 +22,6 @@ Notes: This is only supported in CentOS7.
 11. docker push localhost:5000/test:0.1
 
 - name: nginx init
-kubectl apply -f /tmp/nginx.yaml
+1. kubectl apply -f /tmp/nginx.yaml
+2. curl http://x.x.x.x:30000
 
