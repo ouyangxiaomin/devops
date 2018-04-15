@@ -25,7 +25,8 @@ Notes: This is only supported in CentOS7.
 1. kubectl apply -f /tmp/nginx.yaml
 2. kubectl scale deploy nginx --replicas=2
 3. kubectl set image deploy nginx nginx=nginx:1.9.1
-4. curl http://x.x.x.x:30000
+4. kubectl rollout undo deployment/nginx
+5. curl http://x.x.x.x:30000
 
 
 #################
@@ -36,4 +37,6 @@ For commiter
 4. git remote -v
 5. git remote rm origin (if the origin is https not ssh)
 6. git remote add origin git@github.com:username/repository.git
-7. git push -u origin master (also you can skip the parm: -u origin master)
+7. git add .
+8. git commit -m "test"
+9. git push -u origin master (also you can skip the parm: -u origin master)
