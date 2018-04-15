@@ -1,0 +1,144 @@
+---
+# NOTE: raw install is required to support cloud images which do not have python installed
+- name: "Install python2 and python-simplejson"
+  become: True
+  raw: "yum install -y python python-simplejson || (apt-get update && apt-get install -y python2.7 python-simplejson)"
+
+- name: Gather facts
+  setup:
+
+
+- name: Check if firewalld is installed
+  command: rpm -q firewalld
+  register: firewalld_check
+  failed_when: firewalld_check.rc > 1
+  when: ansible_os_family == 'RedHat'
+
+- name: Disable firewalld
+  become: True
+  service:
+    name: "{{ item }}"
+    enabled: false
+    state: stopped
+  with_items:
+    - firewalld
+  when:
+    - ansible_os_family == 'RedHat'
+    - firewalld_check.rc == 0
+
+- name: Ensure yum repos directory exists
+  file:
+    path: /etc/yum.repos.d/
+    state: directory
+    recurse: yes
+  become: True
+  when: ansible_os_family == 'RedHat'
+
+- name: Enable docker repo yum
+  command: "sudo yum-config-manager \
+    --add-repo \
+    https://download.docker.com/linux/centos/docker-ce.repo"
+
+- name: Install deltarpm packages
+  package:
+    name: "{{ item }}"
+    state: installed
+  become: True
+  with_items:
+    - deltarpm
+  when: ansible_os_family == 'RedHat'
+
+- name: k8s profile
+  become: True
+  template:
+    src: "{{ item }}.repo"
+    dest: "/etc/yum.repos.d/{{ item }}.repo"
+  with_items:
+    - k8s
+  when:
+    - ansible_os_family == 'RedHat'
+
+- name: Install yum packages
+  package:
+    name: "{{ item }}"
+    state: present
+  become: True
+  with_items: "{{ redhat_pkg_install }}"
+  when: ansible_os_family == 'RedHat'
+
+- name: Enable kubelet on docker
+  become: True
+  template:
+    src: 10-kubeadm.conf
+    dest: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+  when: ansible_os_family == 'RedHat'
+
+- name: restart docker
+  shell: "systemctl enable docker.service && systemctl restart docker.service"
+  tags:
+  - restart docker
+
+- name: swapoff
+  shell: swapoff -a
+  tags:
+  - swapoff
+
+- name: restart kubelet
+  shell: "systemctl enable kubelet.service && systemctl restart kubelet.service"
+  tags:
+  - restart kubelet
+
+- name: kubeadm init
+  shell: "kubeadm reset && kubeadm init"
+  tags:
+  - kubeadm init
+
+- name: Ensure .kube exists
+  file:
+    path: /root/.kube
+    state: directory
+    recurse: yes
+  become: True
+  when: ansible_os_family == 'RedHat'
+
+- name: Copying kube-config file
+  copy:
+    src: /etc/kubernetes/admin.conf
+    dest: /root/.kube/config
+    mode: 0755
+
+- name: k8s profile
+  become: True
+  template:
+    src: "{{ item }}.yaml"
+    dest: "/tmp/{{ item }}.yaml"
+  with_items:
+    - calico
+    - nginx
+    - nginx-svc
+  when:
+    - ansible_os_family == 'RedHat'
+
+
+- name: calico init
+  shell: "kubectl apply -f /tmp/calico.yaml && kubectl taint nodes --all node-role.kubernetes.io/master-"
+
+- name: nginx init
+  shell: "kubectl apply -f /tmp/nginx.yaml && kubectl apply -f /tmp/nginx-svc.yaml"
+
+- name: docker registry
+  shell: "docker run -d -p 5000:5000 --restart=always --name registry registry:2"
+  shell: "docker pull hello-world"
+  shell: "docker tag hello-world localhost:5000/hello-world:latest"
+  shell: "docker push localhost:5000/hello-world"
+  shell: "docker rmi hello-world localhost:5000/hello-world"
+  shell: "docker pull localhost:5000/hello-world"
+  shell: "docker stop registry && docker rm -v registry"
+  shell: "copy Dockerfile & index.html /root/"
+  shell: "docker build -t test ."
+  shell: "docker tag test localhost:5000/test:0.1"
+  shell: "docker push localhost:5000/test:0.1"
+
+- name: nginx init
+  shell: "kubectl apply -f /tmp/nginx.yaml"
+

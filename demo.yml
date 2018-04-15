@@ -1,0 +1,6 @@
+- name: Apply role demo
+  gather_facts: false
+  hosts: demo
+  roles:
+    - { role: demo }
+

@@ -1,0 +1,9 @@
+redhat_pkg_install:
+ - epel-release
+ - docker-ce
+ - git
+ - python-setuptools
+ - ntp
+ - kubeadm
+
+
