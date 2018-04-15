@@ -4,4 +4,4 @@
 set -x
 
 yum install -y ansible
-/usr/bin/ansible-playbook -i hosts demo.yml -vvv
+/usr/bin/ansible-playbook -i hosts demo.yml -vvv| tee install.log
