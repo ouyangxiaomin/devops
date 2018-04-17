@@ -4,4 +4,17 @@
 set -x
 
 yum install -y ansible
-/usr/bin/ansible-playbook -i hosts demo.yml -vvv| tee install.log
+
+case  "$1" in
+"-vvv")
+    /usr/bin/ansible-playbook -i hosts demo.yml -vvv| tee install.log
+    ;;
+"-skip")
+    /usr/bin/ansible-playbook -i hosts demo.yml
+    ;;
+*)
+    echo -e "\033[31m "-vvv for more details or -skip for no details" \033[0m"
+    exit 1
+    ;;
+esac
+
