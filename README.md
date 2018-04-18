@@ -40,3 +40,11 @@ For commiter
 7. git add .
 8. git commit -m "test"
 9. git push -u origin master (also you can skip the parm: -u origin master)
+
+
+################
+worldpress-mysql
+1. kubectl create -f https://raw.githubusercontent.com/kubernetes/kubernetes/master/examples/mysql-wordpress-pd/local-volumes.yaml
+2. kubectl create secret generic mysql-pass --from-file=password.txt
+3. kubectl create -f https://raw.githubusercontent.com/kubernetes/kubernetes/master/examples/mysql-wordpress-pd/mysql-deployment.yaml
+4. kubectl create -f https://raw.githubusercontent.com/kubernetes/kubernetes/master/examples/mysql-wordpress-pd/wordpress-deployment.yaml
