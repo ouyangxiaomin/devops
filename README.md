@@ -43,7 +43,7 @@ For commiter
 
 
 ################
-worldpress-mysql
+wordpress-mysql
 1. export KUBE_REPO=https://raw.githubusercontent.com/kubernetes/kubernetes/master
 2. kubectl create secret generic mysql-pass --from-file=password.txt
 3. kubectl create -f $KUBE_REPO/examples/mysql-wordpress-pd/local-volumes.yaml
