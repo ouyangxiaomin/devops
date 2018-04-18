@@ -44,8 +44,7 @@ For commiter
 
 ################
 wordpress-mysql
-1. export KUBE_REPO=https://raw.githubusercontent.com/kubernetes/kubernetes/master
-2. kubectl create secret generic mysql-pass --from-file=password.txt
-3. kubectl create -f $KUBE_REPO/examples/mysql-wordpress-pd/local-volumes.yaml
-4. kubectl create -f $KUBE_REPO/examples/mysql-wordpress-pd/mysql-deployment.yaml
-5. kubectl create -f $KUBE_REPO/examples/mysql-wordpress-pd/wordpress-deployment.yaml
+1. kubectl create secret generic mysql-pass --from-file=password.txt
+2. kubectl create -f local-volumes.yaml (if the volume is GCE, please use gce-volumes.yaml)
+3. kubectl create -f mysql-deployment.yaml
+4. kubectl create -f wordpress-deployment.yaml
