@@ -7,10 +7,10 @@ yum install -y ansible
 
 case  "$1" in
 "-vvv")
-    /usr/bin/ansible-playbook -i hosts demo.yml -vvv| tee install.log
+    /usr/bin/ansible-playbook -i hosts env.yml -vvv| tee install.log
     ;;
 "-skip")
-    /usr/bin/ansible-playbook -i hosts demo.yml
+    /usr/bin/ansible-playbook -i hosts env.yml
     ;;
 *)
     echo -e "\033[31m "-vvv for more details or -skip for no details" \033[0m"
