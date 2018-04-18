@@ -29,7 +29,7 @@ spec:
 #        - name: jenkinshome  
 #          mountPath: /var/jenkins_home  
         - name: jenkinshome
-          mountPath: /tmp
+          mountPath: /var/jenkins_home
         env:  
         - name: JAVA_OPTS  
           value: "-Duser.timezone=Asia/Shanghai"  
@@ -40,5 +40,5 @@ spec:
 #          path: "/opt/jenkins" 
       - name: jenkinshome
         hostPath:
-          path: /root
+          path: /tmp/jenkins
 
