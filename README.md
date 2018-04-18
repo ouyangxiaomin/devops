@@ -22,11 +22,19 @@ Notes: This is only supported in CentOS7.
 11. docker push localhost:5000/test:0.1
 
 - nginx init
-1. kubectl apply -f /tmp/nginx.yaml
+1. kubectl apply -f nginx.yaml
 2. kubectl scale deploy nginx --replicas=2
 3. kubectl set image deploy nginx nginx=nginx:1.9.1
 4. kubectl rollout undo deployment/nginx
 5. curl http://x.x.x.x:30000
+
+
+################
+wordpress-mysql
+1. kubectl create secret generic mysql-pass --from-file=password.txt
+2. kubectl create -f local-volumes.yaml (if the volume is GCE, please use gce-volumes.yaml)
+3. kubectl create -f mysql-deployment.yaml
+4. kubectl create -f wordpress-deployment.yaml
 
 
 #################
@@ -41,10 +49,3 @@ For commiter
 8. git commit -m "test"
 9. git push -u origin master (also you can skip the parm: -u origin master)
 
-
-################
-wordpress-mysql
-1. kubectl create secret generic mysql-pass --from-file=password.txt
-2. kubectl create -f local-volumes.yaml (if the volume is GCE, please use gce-volumes.yaml)
-3. kubectl create -f mysql-deployment.yaml
-4. kubectl create -f wordpress-deployment.yaml
