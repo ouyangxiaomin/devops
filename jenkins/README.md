@@ -4,12 +4,11 @@ Jenkins Get Start
 3. http://x.x.x.x:xxxx
 
 Name: k8s_cluster
-Kubernetes URL: https://kubernetes.default
-Kubernetes Namespace: default
-Jenkins URL: http://jenkins.default:8080
-
-images - Kubernetes Pod Template:
-Name: jnlp-slave
-Labels: jnlp-slave
-Docker image: registry.xxxxx.com/jenkinsci/jnlp-slave:2.52
-Jenkins slave root directory: /home/jenkins
+a. Kubernetes URL: https://kubernetes.default
+b. Kubernetes Namespace: default
+c. Jenkins URL: http://jenkins.default:8080
+d. images - Kubernetes Pod Template:
+e. Name: jnlp-slave
+f. Labels: jnlp-slave
+g. Docker image: registry.xxxxx.com/jenkinsci/jnlp-slave:2.52
+h. Jenkins slave root directory: /home/jenkins
