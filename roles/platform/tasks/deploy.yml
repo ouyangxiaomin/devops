@@ -48,7 +48,7 @@
     - deltarpm
   when: ansible_os_family == 'RedHat'
 
-- name: k8s & jenkins profile
+- name: k8s & jenkins repo
   become: True
   template:
     src: "{{ item }}.repo"
@@ -59,6 +59,19 @@
   when:
     - ansible_os_family == 'RedHat'
 
+- name: jenkins key
+  become: True
+  template:
+    src: "jenkins.io.key"
+    dest: "/tmp/jenkins.io.key"
+  with_items:
+    - jenkins
+  when:
+    - ansible_os_family == 'RedHat'
+
+- name: import jenkins key
+  command: "rpm --import /tmp/jenkins.io.key"
+
 - name: Install yum packages
   package:
     name: "{{ item }}"
@@ -67,6 +80,11 @@
   with_items: "{{ redhat_pkg_install }}"
   when: ansible_os_family == 'RedHat'
 
+- name: restart jenkins
+  shell: "systemctl enable jenkins.service && systemctl restart jenkins"
+  tags:
+  - restart jenkins
+
 - name: Enable kubelet on docker
   become: True
   template:
@@ -74,11 +92,6 @@
     dest: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
   when: ansible_os_family == 'RedHat'
  
-- name: restart jenkins
-  shell: "systemctl enable jenkins.service && systemctl restart jenkins"
-  tags:
-  - restart jenkins
-
 - name: restart docker
   shell: "systemctl enable docker.service && systemctl restart docker.service"
   tags:
