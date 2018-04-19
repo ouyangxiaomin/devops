@@ -59,12 +59,6 @@
   when:
     - ansible_os_family == 'RedHat'
 
-- name: jenkins yum key
-  shell: rpm --import jenkins.io.key
-  tags:
-  - jenkins.key
-
-
 - name: Install yum packages
   package:
     name: "{{ item }}"
@@ -79,6 +73,11 @@
     src: 10-kubeadm.conf
     dest: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
   when: ansible_os_family == 'RedHat'
+ 
+- name: restart jenkins
+  shell: "systemctl enable jenkins.service && systemctl restart jenkins"
+  tags:
+  - restart jenkins
 
 - name: restart docker
   shell: "systemctl enable docker.service && systemctl restart docker.service"
