@@ -1,0 +1,6 @@
+- name: Apply role platform
+  gather_facts: false
+  hosts: platform
+  roles:
+    - { role: platform }
+

@@ -1,6 +1,6 @@
 [control]
 localhost       ansible_connection=local
 
-[env:children]
+[platform:children]
 control
 

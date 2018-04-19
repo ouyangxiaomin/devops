@@ -48,15 +48,22 @@
     - deltarpm
   when: ansible_os_family == 'RedHat'
 
-- name: k8s profile
+- name: k8s & jenkins profile
   become: True
   template:
     src: "{{ item }}.repo"
     dest: "/etc/yum.repos.d/{{ item }}.repo"
   with_items:
     - k8s
+    - jenkins
   when:
     - ansible_os_family == 'RedHat'
+
+- name: jenkins yum key
+  shell: rpm --import jenkins.io.key
+  tags:
+  - jenkins.key
+
 
 - name: Install yum packages
   package:
@@ -107,21 +114,6 @@
     dest: /root/.kube/config
     mode: 0755
 
-- name: k8s profile
-  become: True
-  template:
-    src: "{{ item }}.yaml"
-    dest: "/tmp/{{ item }}.yaml"
-  with_items:
-    - calico
-    - nginx
-    - nginx-svc
-  when:
-    - ansible_os_family == 'RedHat'
-
-
 - name: calico init
-  shell: "kubectl apply -f /tmp/calico.yaml && kubectl taint nodes --all node-role.kubernetes.io/master-"
+  shell: "kubectl apply -f calico.yaml && kubectl taint nodes --all node-role.kubernetes.io/master-"
 
-- name: nginx init
-  shell: "kubectl apply -f /tmp/nginx.yaml && kubectl apply -f /tmp/nginx-svc.yaml"

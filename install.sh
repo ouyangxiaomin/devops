@@ -5,16 +5,9 @@ set -x
 
 yum install -y ansible
 
-case  "$1" in
-"-vvv")
-    /usr/bin/ansible-playbook -i hosts env.yml -vvv| tee install.log
-    ;;
-"-skip")
-    /usr/bin/ansible-playbook -i hosts env.yml
-    ;;
-*)
-    echo -e "\033[31m "-vvv for more details or -skip for no details" \033[0m"
-    exit 1
-    ;;
-esac
-
+if $1 eq "-vvv"
+then
+    /usr/bin/ansible-playbook -i hosts platform.yml -vvv| tee install.log
+else
+    /usr/bin/ansible-playbook -i hosts platform.yml
+fi
