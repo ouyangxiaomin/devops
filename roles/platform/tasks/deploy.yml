@@ -66,11 +66,6 @@
   with_items: "{{ redhat_pkg_install }}"
   when: ansible_os_family == 'RedHat'
 
-- name: restart jenkins
-  shell: "systemctl enable jenkins.service && systemctl restart jenkins"
-  tags:
-  - restart jenkins
-
 - name: Enable kubelet on docker
   become: True
   template:
