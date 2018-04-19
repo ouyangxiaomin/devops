@@ -107,6 +107,16 @@
     dest: /root/.kube/config
     mode: 0755
 
+- name: calico yaml
+  become: True
+  template:
+    src: "{{ item }}.yaml"
+    dest: "/tmp/{{ item }}.yaml"
+  with_items:
+    - calico
+  when:
+    - ansible_os_family == 'RedHat'
+
 - name: calico init
-  shell: "kubectl apply -f calico.yaml && kubectl taint nodes --all node-role.kubernetes.io/master-"
+  shell: "kubectl apply -f /tmp/calico.yaml && kubectl taint nodes --all node-role.kubernetes.io/master-"
 
