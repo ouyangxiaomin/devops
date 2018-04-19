@@ -48,29 +48,15 @@
     - deltarpm
   when: ansible_os_family == 'RedHat'
 
-- name: k8s & jenkins repo
+- name: k8s repo
   become: True
   template:
     src: "{{ item }}.repo"
     dest: "/etc/yum.repos.d/{{ item }}.repo"
   with_items:
     - k8s
-    - jenkins
   when:
     - ansible_os_family == 'RedHat'
-
-- name: jenkins key
-  become: True
-  template:
-    src: "jenkins.io.key"
-    dest: "/tmp/jenkins.io.key"
-  with_items:
-    - jenkins
-  when:
-    - ansible_os_family == 'RedHat'
-
-- name: import jenkins key
-  command: "rpm --import /tmp/jenkins.io.key"
 
 - name: Install yum packages
   package:
