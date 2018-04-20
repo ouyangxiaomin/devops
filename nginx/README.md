@@ -1,9 +1,7 @@
-modify /usr/lib/systemd/system/docker.service with "ExecStart=/usr/bin/dockerd --insecure-registry=x.x.x.x:5000"
+echo '{ "insecure-registries":["x.x.x.x:5000"] }' > /etc/docker/daemon.json (install docker not docker-ce, also ensure the version is same between server and client)
 
 - docker registry
 1. docker run -d -p 5000:5000 --restart=always --name registry registry:2
-- docker run -d -p 5000:5000 --privileged=true -v /opt/registry:/var/lib/registry registry
-
 2. docker pull hello-world
 3. docker tag hello-world x.x.x.x:5000/hello-world:latest
 4. docker push x.x.x.x:5000/hello-world
