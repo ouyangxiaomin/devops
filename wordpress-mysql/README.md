@@ -5,5 +5,5 @@ wordpress-mysql on localhost
 4. kubectl create -f wordpress-deployment.yaml
 5. http://x.x.x.x:nnnn (nnnn is the nodeport in svc)
 
-### git clone https://github.com/IBM/Scalable-WordPress-deployment-on-Kubernetes.git
+- git clone https://github.com/IBM/Scalable-WordPress-deployment-on-Kubernetes.git
 
