@@ -34,11 +34,6 @@
   become: True
   when: ansible_os_family == 'RedHat'
 
-- name: Enable docker repo yum
-  command: "sudo yum-config-manager \
-    --add-repo \
-    https://download.docker.com/linux/centos/docker-ce.repo"
-
 - name: Install deltarpm packages
   package:
     name: "{{ item }}"
