@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: localhost:5000/test:latest
+        image: localhost:5000/test:0.1
         ports:
         - containerPort: 80
         volumeMounts:
