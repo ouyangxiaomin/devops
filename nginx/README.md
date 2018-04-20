@@ -1,3 +1,5 @@
+modify /usr/lib/systemd/system/docker.service with "ExecStart=/usr/bin/dockerd --insecure-registry=9.110.85.100:5000" and restart docker
+
 - docker registry
 1. docker run -d -p 5000:5000 --restart=always --name registry registry:2
 2. docker pull hello-world
