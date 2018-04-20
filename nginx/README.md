@@ -1,16 +1,16 @@
-modify /usr/lib/systemd/system/docker.service with "ExecStart=/usr/bin/dockerd --insecure-registry=9.110.85.100:5000" and restart docker
+modify /usr/lib/systemd/system/docker.service with "ExecStart=/usr/bin/dockerd --insecure-registry=x.x.x.x:5000"
 
 - docker registry
 1. docker run -d -p 5000:5000 --restart=always --name registry registry:2
 2. docker pull hello-world
-3. docker tag hello-world localhost:5000/hello-world:latest
-4. docker push localhost:5000/hello-world
-5. docker rmi hello-world localhost:5000/hello-world
-6. docker pull localhost:5000/hello-world
+3. docker tag hello-world x.x.x.x:5000/hello-world:latest
+4. docker push x.x.x.x:5000/hello-world
+5. docker rmi hello-world x.x.x.x:5000/hello-world
+6. docker pull x.x.x.x:5000/hello-world
 7. docker stop registry && docker rm -v registry
 8. docker build -t test .
-9. docker tag test localhost:5000/test:0.1
-10. docker push localhost:5000/test:0.1
+9. docker tag test x.x.x.x:5000/test:0.1
+10. docker push x.x.x.x:5000/test:0.1
 
 - nginx init
 1. kubectl apply -f nginx.yaml
