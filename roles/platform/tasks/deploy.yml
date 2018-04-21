@@ -79,7 +79,7 @@
   - restart docker
 
 - name: swapoff
-  shell: swapoff -a
+  shell: sed -i '/swap/d' /etc/fstab
   tags:
   - swapoff
 
