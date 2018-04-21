@@ -48,13 +48,6 @@
     --add-repo \
     https://download.docker.com/linux/centos/docker-ce.repo"
 
-- name: Install docker rpm gpg key
-  rpm_key:
-    state: present
-    key: "https://download-stage.docker.com/linux/centos/gpg"
-  become: True
-  when: ansible_os_family == 'RedHat'
-
 - name: k8s repo
   become: True
   template:
