@@ -80,6 +80,7 @@
 
 - name: swapoff
   shell: sed -i '/swap/d' /etc/fstab
+  shell: swapoff -a
   tags:
   - swapoff
 
