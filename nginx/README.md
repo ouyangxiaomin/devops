@@ -1,4 +1,6 @@
-echo '{ "insecure-registries":["x.x.x.x:5000"] }' > /etc/docker/daemon.json (install docker not docker-ce, also ensure the version is same between server and client)
+1. echo '{ "insecure-registries":["x.x.x.x:5000"] }' > /etc/docker/daemon.json (docker)
+- or
+2. modify /lib/systemd/system/docker.service with "ExecStart=/usr/bin/dockerd --insecure-registry=9.110.85.100:5000" (docker-ce)
 
 - docker registry
 1. docker run -d -p 5000:5000 --restart=always --name registry registry:2
