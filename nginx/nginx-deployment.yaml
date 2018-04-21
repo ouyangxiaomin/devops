@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: localhost:5000/test:0.1
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: tz-config
+          mountPath: /etc/localtime
+        - name: test
+          mountPath: /tmp
+      volumes:
+      - name: tz-config
+        hostPath:
+          path: /usr/share/zoneinfo/Asia/Shanghai
+      - name: test
+        hostPath:
+          path: /tmp/
