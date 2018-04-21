@@ -1,6 +1,6 @@
 redhat_pkg_install:
  - epel-release
- - docker
+ - docker-ce
  - git
  - python-setuptools
  - ntp
