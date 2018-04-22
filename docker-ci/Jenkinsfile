@@ -1,0 +1,180 @@
+#!groovy
+
+node {
+  try{
+    timestamps{
+       
+    env.BRANCH_NAME
+	sh 'echo branch: $BRANCH_NAME'
+    
+    env.deploy_submitter = 'zzhifeng@cn.ibm.com'
+	
+    // if master branch
+    if(env.BRANCH_NAME == 'master'){
+            
+      stage('git checkout') {
+          git branch: 'master', credentialsId: 'ce591e8b-bf0a-41e4-a679-6f8082efa93c', url: 'http://itaasgitlab.cn.ibm.com/zzhifeng/docker-ci.git'
+      }
+   
+      stage('maven build') {
+	      sh 'mvn -version'
+          sh 'mvn -Dmaven.test.failure.ignore clean install -U' 
+      }
+      
+      stage('build docker image') {
+         sh 'echo job name: $JOB_NAME build_number: $BUILD_NUMBER'      
+
+sh '''cat <<EOF > Dockerfile
+FROM 9.111.212.224/library/tomcat:7.0
+ADD ./target/demo.war /usr/local/tomcat/webapps/
+RUN echo "Asia/Shanghai" > /etc/timezone
+RUN dpkg-reconfigure -f noninteractive tzdata
+EOF'''
+      }
+      
+      // do deployment to QA env
+      stage ('Deploy to QA'){
+        //input message: 'Are you sure to deploy to QA',
+        //ok: 'Depoly',
+        //submitter: "${deploy_submitter}"
+         echo 'Deploy to QA'
+		 deployToQA()
+         sh 'echo QA env URL: http://qa.zzhifeng.com/demo' 		 
+      }	
+  
+  
+      // do deploy to UAT env
+      stage ('Deploy to UAT'){
+        timeout(time: 12, unit: 'HOURS'){
+           input message: 'Are you sure to deploy to UAT',
+           ok: 'Depoly',
+           submitter: "${deploy_submitter}"
+         }   
+         echo 'Deploy to UAT'
+		 deployToUAT()
+         sh 'echo UAT env URL: http://uat.zzhifeng.com/demo'  
+      }	
+
+      
+      // do deploy to Prod env  
+      stage ('Deploy to Prod'){
+        timeout(time: 12, unit: 'HOURS'){
+           input message: 'Are you sure to deploy to Prod',
+           ok: 'Depoly',
+           submitter: "${deploy_submitter}"                   
+         }
+         echo 'Deploy to Prod'
+		 deployToProd()
+         sh 'echo Prod env URL: http://prod.zzhifeng.com/demo'  
+      }	
+    
+    
+  
+    }else{
+     //not master branch
+     
+      stage('git checkout') {
+          git branch: 'dev', credentialsId: 'ce591e8b-bf0a-41e4-a679-6f8082efa93c', url: 'http://itaasgitlab.cn.ibm.com/zzhifeng/docker-ci.git'
+      }
+   
+      stage('maven build') {
+	      sh 'mvn -version'
+          sh 'mvn -Dmaven.test.failure.ignore clean install -U' 
+      }
+      
+      stage('build docker image') {
+         sh 'echo job name: $JOB_NAME build_number: $BUILD_NUMBER'      
+
+sh '''cat <<EOF > Dockerfile
+FROM 9.111.212.224/library/tomcat:7.0
+ADD ./target/demo.war /usr/local/tomcat/webapps/
+RUN echo "Asia/Shanghai" > /etc/timezone
+RUN dpkg-reconfigure -f noninteractive tzdata
+EOF'''
+      }
+      
+     env.envTag = 'Dev'     
+     stage ('Deploy to Dev'){
+        //input message: 'are you srue to deploy to Dev',
+        //ok: 'Depoly',
+        submitter: "${deploy_submitter}"
+         echo 'Deploy to Dev'
+		 deployToDev()
+         sh 'echo Dev env URL: http://dev.zzhifeng.com/demo'  
+     }    
+
+     
+   }
+  }    
+  }catch(err){
+       throw err
+   }
+ }
+ 
+
+
+def deployToDev(){  
+    env.imageTag = 'dev'  
+    env.envTag   = 'dev' 
+
+    sh 'echo deploy to Dev env .........'    
+    
+	sh 'docker -H tcp://9.111.213.236:4000 build --rm -t 9.111.212.224/library/$imageTag-tomcat:v$BUILD_NUMBER .'
+	sh 'docker -H tcp://9.111.213.236:4000 login -u zzhifeng -p Passw0rd -e \"zzhifeng@cn.ibm.com\" 9.111.212.224'
+    sh 'docker -H tcp://9.111.213.236:4000 push 9.111.212.224/library/$imageTag-tomcat:v$BUILD_NUMBER'    
+    
+	sh 'echo rolling update'
+	sh 'sshpass -p "#noPassw0rd" ssh -o StrictHostKeyChecking=no root@9.111.121.250 "kubectl set image deploy/deploy-$envTag-tomcat container-$envTag-tomcat=9.111.212.224/library/$imageTag-tomcat:v$BUILD_NUMBER"'
+	  
+	sh 'sshpass -p "#noPassw0rd" ssh -o StrictHostKeyChecking=no root@9.111.121.250 "kubectl rollout status deploy/deploy-$envTag-tomcat"'    
+    
+}
+
+ 
+ 
+ def deployToQA(){ 
+    env.imageTag = 'master'  
+    env.envTag   = 'qa'
+    
+    sh 'echo deploy to QA env .........'
+    
+	sh 'docker -H tcp://9.111.213.236:4000 build --rm -t 9.111.212.224/library/$imageTag-tomcat:v$BUILD_NUMBER .'
+	sh 'docker -H tcp://9.111.213.236:4000 login -u zzhifeng -p Passw0rd -e \"zzhifeng@cn.ibm.com\" 9.111.212.224'
+    sh 'docker -H tcp://9.111.213.236:4000 push 9.111.212.224/library/$imageTag-tomcat:v$BUILD_NUMBER'
+
+	sh 'echo rolling update'
+	sh 'sshpass -p "#noPassw0rd" ssh -o StrictHostKeyChecking=no root@9.111.121.250 "kubectl set image deploy/deploy-$envTag-tomcat container-$envTag-tomcat=9.111.212.224/library/$imageTag-tomcat:v$BUILD_NUMBER"'
+	  
+	sh 'sshpass -p "#noPassw0rd" ssh -o StrictHostKeyChecking=no root@9.111.121.250 "kubectl rollout status deploy/deploy-$envTag-tomcat"'
+    
+}
+
+
+
+def deployToUAT(){  
+    env.imageTag = 'master'  
+    env.envTag   = 'uat'  
+
+    sh 'echo deploy to UAT env .........'
+    
+	sh 'echo rolling update'
+	sh 'sshpass -p "#noPassw0rd" ssh -o StrictHostKeyChecking=no root@9.111.121.250 "kubectl set image deploy/deploy-$envTag-tomcat container-$envTag-tomcat=9.111.212.224/library/$imageTag-tomcat:v$BUILD_NUMBER"'
+	  
+	sh 'sshpass -p "#noPassw0rd" ssh -o StrictHostKeyChecking=no root@9.111.121.250 "kubectl rollout status deploy/deploy-$envTag-tomcat"'
+    
+}
+
+
+
+def deployToProd(){   
+    env.imageTag = 'master'  
+    env.envTag   = 'prod'  
+
+    sh 'echo deploy to Prod env .........'
+    
+	sh 'echo rolling update'
+	sh 'sshpass -p "#noPassw0rd" ssh -o StrictHostKeyChecking=no root@9.111.121.250 "kubectl set image deploy/deploy-$envTag-tomcat container-$envTag-tomcat=9.111.212.224/library/$imageTag-tomcat:v$BUILD_NUMBER"'
+	  
+	sh 'sshpass -p "#noPassw0rd" ssh -o StrictHostKeyChecking=no root@9.111.121.250 "kubectl rollout status deploy/deploy-$envTag-tomcat"'
+    
+    }
