@@ -9,4 +9,4 @@
 6. kubectl create -f xxx.yaml
 7. http://x.x.x.x:30000/demo/TestController
 8. once we update the code, we can repeat step1-step7:
-- step 5/6 replace with "kubectl set image deploy/deploy-$envTag-tomcat container-$envTag-tomcat=x.x.x.x/library/$imageTag-tomcat:v$BUILD_NUMBER"
+-- step 5/6 replace with "kubectl set image deploy/deploy-$envTag-tomcat container-$envTag-tomcat=x.x.x.x/library/$imageTag-tomcat:v$BUILD_NUMBER"
