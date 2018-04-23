@@ -2,6 +2,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment  
 metadata:  
   name: jenkins  
+  namespace: kube-system
 spec:  
   replicas: 1  
   strategy:  
@@ -30,6 +31,10 @@ spec:
 #          mountPath: /var/jenkins_home  
         - name: jenkinshome
           mountPath: /var/jenkins_home
+        - name: docker
+          mountPath: /usr/bin/docker
+        - name: dockersocket
+          mountPath: /var/run/docker.sock
         env:  
         - name: JAVA_OPTS  
           value: "-Duser.timezone=Asia/Shanghai"  
@@ -40,5 +45,12 @@ spec:
 #          path: "/opt/jenkins" 
       - name: jenkinshome
         hostPath:
-          path: /tmp/jenkins
+          path: /tmp/test
+      - name: docker
+        hostPath:
+          path: /usr/bin/docker 
+      - name: dockersocket
+        hostPath:
+          path: /var/run/docker.sock
+      serviceAccount: "jenkins-admin"
 
