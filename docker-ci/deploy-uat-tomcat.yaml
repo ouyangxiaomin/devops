@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: demo
+  name: deploy-uat-tomcat
   labels:
-    app: demo
+    app: deploy-uat-tomcat
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: demo
+      app: deploy-uat-tomcat
   template:
     metadata:
       labels:
-        app: demo
+        app: deploy-uat-tomcat
     spec:
       containers:
-      - name: demo
-        image: demo:v0.1
+      - name: container-uat-tomcat
+        image: master-tomcat:v0.1
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
