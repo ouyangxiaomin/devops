@@ -1,22 +1,18 @@
-kind: Service
-apiVersion: v1
-metadata:
-  labels:
-    k8s-app: jenkins
-  name: jenkins
-  namespace: kube-system
-  annotations:
-    prometheus.io/scrape: 'true'
-spec:
-  ports:
-    - port: 8080
-      name: jenkins
-      nodePort: 31888
-      targetPort: 8080
-    - port: 50000
-      name: jenkins-agent
-      nodePort: 50000
-      targetPort: 50000
+kind: Service  
+apiVersion: v1  
+metadata:  
+  labels:  
+      app: jenkins  
+  name: jenkins  
+spec:  
   type: NodePort
-  selector:
-    k8s-app: jenkins
+  ports:  
+  - port: 8080  
+    targetPort: 8080  
+    nodePort: 30005
+    name: web  
+  - port: 50000  
+    targetPort: 50000  
+    name: agent  
+  selector:  
+    app: jenkins 

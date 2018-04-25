@@ -2,7 +2,6 @@ apiVersion: extensions/v1beta1
 kind: Deployment  
 metadata:  
   name: jenkins  
-  namespace: kube-system
 spec:  
   replicas: 1  
   strategy:  
@@ -18,7 +17,8 @@ spec:
       containers:  
       - name: jenkins  
         image: jenkins:latest  
-        imagePullPolicy: IfNotPresent  
+        #imagePullPolicy: IfNotPresent  
+        imagePullPolicy: Always
         ports:  
         - containerPort: 8080  
           name: web  
@@ -52,5 +52,4 @@ spec:
       - name: dockersocket
         hostPath:
           path: /var/run/docker.sock
-      serviceAccount: "jenkins-admin"
 
