@@ -16,9 +16,9 @@ spec:
     spec:  
       containers:  
       - name: jenkins  
-        image: jenkins:latest  
-        #imagePullPolicy: IfNotPresent  
-        imagePullPolicy: Always
+        image: xxx:latest  
+        imagePullPolicy: IfNotPresent  
+        #imagePullPolicy: Always
         ports:  
         - containerPort: 8080  
           name: web  

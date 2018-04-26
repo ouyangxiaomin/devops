@@ -3,12 +3,8 @@ Jenkins Get Start
 2. kubectl create -f jenkins-service.yaml
 3. http://x.x.x.x:xxxx
 
-Name: k8s_cluster
-1. Kubernetes URL: https://kubernetes.default
-2. Kubernetes Namespace: default
-3. Jenkins URL: http://jenkins.default:8080
-4. images - Kubernetes Pod Template:
-5. Name: jnlp-slave
-6. Labels: jnlp-slave
-7. Docker image: registry.xxxxx.com/jenkinsci/jnlp-slave:2.52
-8. Jenkins slave root directory: /home/jenkins
+Jenkins Version Build From Source
+1. mv Dockerfile.jenkins-template Dockerfile
+2. update version (also ensure the cksum correct)
+3. docker build -t jenkins-xxx .
+4. if you need package maven, please add maven commands before build, refer to Dockerfile.maven-template
