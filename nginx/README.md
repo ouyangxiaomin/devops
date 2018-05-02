@@ -15,7 +15,7 @@
 10. docker push x.x.x.x:5000/test:0.1
 
 - nginx init
-1. kubectl apply -f nginx.yaml
+1. kubectl apply -f nginx-ing.yaml
 2. kubectl scale deploy nginx --replicas=2
 3. kubectl set image deploy nginx nginx=nginx:1.9.1
 4. kubectl rollout undo deployment/nginx
