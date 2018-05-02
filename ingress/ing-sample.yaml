@@ -5,17 +5,6 @@ metadata:
   namespace: default
 spec:
   rules:
-  - host: traefik.test.io
-    http:
-      paths:
-      - path: /my-nginx
-        backend:
-          serviceName: my-nginx
-          servicePort: 80
-      - path: /frontend
-        backend:
-          serviceName: frontend
-          servicePort: 80
   - host: traefik.nginx.io
     http:
       paths:
@@ -30,4 +19,15 @@ spec:
         backend:
           serviceName: frontend
           servicePort: 80
-
+  - host: traefik.test.io
+    http:
+      paths:
+      - path: /my-nginx
+        backend:
+          serviceName: my-nginx
+          servicePort: 80
+      - path: /frontend
+        backend:
+          serviceName: frontend
+          servicePort: 80
+ 

@@ -7,3 +7,5 @@
 - http://traefik-ui.local
 - http://traefik.nginx.io
 - http://traefik.frontend.io
+
+If you only want to use one domain and sub-path, you can update the last section in ing-sample.yaml according to your design.
