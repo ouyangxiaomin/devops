@@ -2,21 +2,22 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx
+  namespace: kube-system
   labels:
-    app: nginx
+    k8s-app: nginx
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: nginx
+      k8s-app: nginx
   template:
     metadata:
       labels:
-        app: nginx
+        k8s-app: nginx
     spec:
       containers:
       - name: nginx
-        image: localhost:5000/test:0.1
+        image: nginx
         ports:
         - containerPort: 80
         volumeMounts:

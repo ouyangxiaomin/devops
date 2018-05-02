@@ -55,7 +55,6 @@
     dest: "/etc/yum.repos.d/{{ item }}.repo"
   with_items:
     - k8s
-    - jenkins
   when:
     - ansible_os_family == 'RedHat'
 
@@ -97,12 +96,6 @@
   tags:
   - restart kubelet
 
-- name: restart jenkins
-  shell: "systemctl enable jenkins.service && systemctl restart jenkins.service"
-  tags:
-  - restart kubelet
-
-
 - name: kubeadm init
   shell: "kubeadm reset && kubeadm init"
   tags:
@@ -134,8 +127,4 @@
 
 - name: calico init
   shell: "kubectl apply -f /tmp/calico.yaml && kubectl taint nodes --all node-role.kubernetes.io/master-"
-
-- name: chown jenkins
-  command: "chown -R jenkins /var/run/docker.sock"
-
 

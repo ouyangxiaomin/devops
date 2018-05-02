@@ -1,7 +1,6 @@
 redhat_pkg_install:
  - epel-release
  - docker-ce
- - jenkins
  - maven
  - git
  - python-setuptools

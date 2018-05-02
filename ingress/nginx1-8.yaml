@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-nginx
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    app: nginx1-8
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: nginx1-8-deployment
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: nginx1-8
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.8
+        ports:
+        - containerPort: 80

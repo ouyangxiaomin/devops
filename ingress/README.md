@@ -1,0 +1,9 @@
+- kubectl create -f .
+- kubectl get ing -n kube-system
+- curl 9.110.85.100 -H Host:traefik-ui.local
+- kubectl get ing
+- curl 9.110.85.100 -H Host:traefik.nginx.io
+- curl 9.110.85.100 -H Host:traefik.frontend.io
+- http://traefik-ui.local
+- http://traefik.nginx.io
+- http://traefik.frontend.io
