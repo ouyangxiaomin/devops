@@ -21,5 +21,4 @@
 4. kubectl rollout undo deployment/nginx
 5. curl http://x.x.x.x:30000
 
-- nginx ingress
--- If you want to use ingress, you should enable traefik-ingress before create nginx-ing.yaml
+- curl 9.110.85.100 -H host:www.test.com

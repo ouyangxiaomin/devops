@@ -1,13 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  labels:
+    k8s-app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: nginx
+  template:
+    metadata:
+      labels:
+        k8s-app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: tz-config
+          mountPath: /etc/localtime
+        - name: test
+          mountPath: /tmp
+      volumes:
+      - name: tz-config
+        hostPath:
+          path: /usr/share/zoneinfo/Asia/Shanghai
+      - name: test
+        hostPath:
+          path: /tmp/
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc
+spec:
+  selector:
+    k8s-app: nginx
+  ports:
+  - port: 80
+    targetPort: 80
+---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: test
+  name: nginx-ing
 spec:
   rules:
-  - host: traefik.www.test.com
+  - host: www.test.com
     http:
       paths:
       - path: /
         backend:
-          serviceName: nginx
-          servicePort: 8088
+          serviceName: nginx-svc
+          servicePort: 80
