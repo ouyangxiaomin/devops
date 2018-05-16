@@ -5,9 +5,4 @@ set -x
 
 yum install -y ansible
 
-if $1 -eq "-vvv"
-then
-    /usr/bin/ansible-playbook -i hosts platform.yml
-else
-    /usr/bin/ansible-playbook -i hosts platform.yml -vvv| tee install.log
-fi
+/usr/bin/ansible-playbook -i hosts platform.yml -vvv| tee install.log
